@@ -1,0 +1,17 @@
+GET http://127.0.0.1:5000/
+POST http://127.0.0.1:5000/stats
+GET https://api.exchangeratesapi.io/2020-03-11?base=EUR&symbols=JPY
+GET https://api.exchangeratesapi.io/2020-03-12?base=EUR&symbols=JPY
+GET https://api.exchangeratesapi.io/2020-03-13?base=EUR&symbols=JPY
+GET https://api.exchangeratesapi.io/2020-03-14?base=EUR&symbols=JPY
+GET https://api.exchangeratesapi.io/2020-03-15?base=EUR&symbols=JPY
+GET http://api.nbp.pl/api/exchangerates/rates/a/EUR/2020-03-11/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/JPY/2020-03-11/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/EUR/2020-03-12/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/JPY/2020-03-12/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/EUR/2020-03-13/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/JPY/2020-03-13/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/EUR/2020-03-13/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/JPY/2020-03-13/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/EUR/2020-03-13/?format=json
+GET http://api.nbp.pl/api/exchangerates/rates/a/JPY/2020-03-13/?format=json
