@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Currency exchange statistics</title>
+    <style>
+        table, th, td {
+            padding: 10px;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
+<h1>Currency exchange statistics</h1>
+<p>Showing average exchange rates.</p>
+
+<h4>Dates: {{ start_date }} - {{ end_date }}</h4>
+<h4>Base currency: {{ b_currency }}</h4>
+<h4>Quote currency: {{ q_currency }}</h4>
+
+<h3>European Central Bank</h3>
+<b>Minimal exchange rate:</b> {{ min_ecb_rate }} <b> on </b> {{ min_ecb_day }}
+<br/>
+<b>Maximal exchange rate:</b> {{ max_ecb_rate }} <b> on </b> {{ max_ecb_day }}
+<br/>
+<b>Average exchange rate:</b> {{ avg_ecb_rate }}
+<br/>
+<h3>National Bank of Poland</h3>
+<b>Minimal exchange rate:</b> {{ min_nbp_rate }} <b> on </b> {{ min_nbp_day }}
+<br/>
+<b>Maximal exchange rate:</b> {{ max_nbp_rate }} <b> on </b> {{ max_nbp_day }}
+<br/>
+<b>Average exchange rate:</b> {{ avg_nbp_rate }}
+<br/>
+
+<table>
+    <h3>Daily rates</h3>
+    <thead>
+    <th>Day</th>
+    <th>ECB</th>
+    <th>NBP</th>
+    <th> ECB to NBP </th>
+    </thead>
+
+    <tbody>
+    {% for row in rates %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
 
 </body>
 </html>

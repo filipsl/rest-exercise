@@ -2,18 +2,13 @@ from flask import Flask, render_template, request
 import datetime
 from datetime import datetime, timedelta
 import requests
-import numpy as np
+from json import JSONDecodeError
 
 app = Flask(__name__)
 
-API_ER_URL = 'https://api.exchangeratesapi.io/{}'
+API_ECB_URL = 'https://api.exchangeratesapi.io/{}'
 API_NBP_URL = 'http://api.nbp.pl/api/exchangerates/rates/{}/{}/{}/'
 
-
-# TODO
-# Average exchange rate
-# Minimal exchange rate - with day
-# Maximal exchange rate - with day
 
 def adjust_day(day):
     if day.weekday() == 5:
@@ -24,17 +19,32 @@ def adjust_day(day):
         return day
 
 
-def requests_er(b_currency, q_currency, start_date, end_date):
+def requests_ecb(b_currency, q_currency, start_date, end_date):
     day_count = (end_date - start_date).days + 1
     rates_list = []
     for d in (start_date + timedelta(n) for n in range(day_count)):
-        r_er = requests.get(
-            API_ER_URL.format(d.strftime('%Y-%m-%d')),
+        r_ecb = requests.get(
+            API_ECB_URL.format(d.strftime('%Y-%m-%d')),
             params={'base': b_currency, 'symbols': q_currency},
         )
-        r_json = r_er.json()
-        rates_list.append((d, r_json['rates'][q_currency]))
+        r_json = r_ecb.json()
+        rates_list.append((d.strftime('%Y-%m-%d'), r_json['rates'][q_currency]))
     return rates_list
+
+
+def request_nbp_json(currency, day):
+    r_json = None
+    while not r_json:
+        try:
+            r_nbp = requests.get(
+                API_NBP_URL.format('a', currency,
+                                   day.strftime('%Y-%m-%d')),
+                params={'format': 'json'},
+            )
+            r_json = r_nbp.json()
+        except JSONDecodeError:
+            day = day - timedelta(days=1)
+    return r_json
 
 
 def requests_nbp(b_currency, q_currency, start_date, end_date):
@@ -42,28 +52,17 @@ def requests_nbp(b_currency, q_currency, start_date, end_date):
     rates_list = []
     for d in (start_date + timedelta(n) for n in range(day_count)):
         if b_currency == q_currency:
-            rates_list.append((d, 1.0))
+            rates_list.append((d.strftime('%Y-%m-%d'), 1.0))
         elif b_currency == 'PLN' or q_currency == 'PLN':
-            r_nbp = requests.get(
-                API_NBP_URL.format('a', b_currency if q_currency == 'PLN' else q_currency,
-                                   adjust_day(d).strftime('%Y-%m-%d')),
-                params={'format': 'json'},
-            )
-            r_json = r_nbp.json()
+            r_json = request_nbp_json(b_currency if q_currency == 'PLN' else q_currency,
+                                      adjust_day(d))
             rate = r_json['rates'][0]['mid']
-            rates_list.append((d, rate if q_currency == 'PLN' else 1 / rate))
+            rates_list.append((d.strftime('%Y-%m-%d'), rate if q_currency == 'PLN' else 1 / rate))
         else:
-            r_nbp_b = requests.get(
-                API_NBP_URL.format('a', b_currency, adjust_day(d).strftime('%Y-%m-%d')),
-                params={'format': 'json'},
-            )
-            r_b_json = r_nbp_b.json()
-            r_nbp_q = requests.get(
-                API_NBP_URL.format('a', q_currency, adjust_day(d).strftime('%Y-%m-%d')),
-                params={'format': 'json'},
-            )
-            r_q_json = r_nbp_q.json()
-            rates_list.append((d, r_b_json['rates'][0]['mid'] / r_q_json['rates'][0]['mid']))
+            r_b_json = request_nbp_json(b_currency, adjust_day(d))
+            r_q_json = request_nbp_json(q_currency, adjust_day(d))
+            rates_list.append(
+                (d.strftime('%Y-%m-%d'), r_b_json['rates'][0]['mid'] / r_q_json['rates'][0]['mid']))
     return rates_list
 
 
@@ -74,12 +73,37 @@ def min_max_avg_rate(rates_list):
     return min_day_rate, max_day_rate, avg_rate
 
 
+def get_stats_page(b_currency, q_currency, start_date, end_date, rates_ecb, rates_nbp):
+    min_ecb_rate, max_ecb_rate, avg_ecb_rate = min_max_avg_rate(rates_ecb)
+    min_nbp_rate, max_nbp_rate, avg_nbp_rate = min_max_avg_rate(rates_nbp)
+    rates = map(
+        lambda rd_ecb, rd_nbp: (
+            rd_ecb[0], '%.5f' % rd_ecb[1], '%.5f' % rd_nbp[1], '%.3f%%' % ((rd_ecb[1] - rd_nbp[1]) * 100 / rd_nbp[1])),
+        rates_ecb, rates_nbp)
+
+    return render_template('stats.html',
+                           b_currency=b_currency,
+                           q_currency=q_currency,
+                           start_date=start_date.strftime('%Y-%m-%d'),
+                           end_date=end_date.strftime('%Y-%m-%d'),
+                           min_ecb_rate='%.5f' % min_ecb_rate[1],
+                           min_ecb_day=min_ecb_rate[0],
+                           max_ecb_rate='%.5f' % max_ecb_rate[1],
+                           max_ecb_day=max_ecb_rate[0],
+                           avg_ecb_rate='%.5f' % avg_ecb_rate,
+                           min_nbp_rate='%.5f' % min_nbp_rate[1],
+                           min_nbp_day=min_nbp_rate[0],
+                           max_nbp_rate='%.5f' % max_nbp_rate[1],
+                           max_nbp_day=max_nbp_rate[0],
+                           avg_nbp_rate='%.5f' % avg_nbp_rate,
+                           rates=rates,
+                           )
+
+
 def make_requests(b_currency, q_currency, start_date, end_date):
-    rates_er = requests_er(b_currency, q_currency, start_date, end_date)
+    rates_ecb = requests_ecb(b_currency, q_currency, start_date, end_date)
     rates_nbp = requests_nbp(b_currency, q_currency, start_date, end_date)
-    print(min_max_avg_rate(rates_er))
-    print(min_max_avg_rate(rates_nbp))
-    return 'Hello!'
+    return get_stats_page(b_currency, q_currency, start_date, end_date, rates_ecb, rates_nbp)
 
 
 @app.route('/')
