@@ -27,6 +27,7 @@ def requests_ecb(b_currency, q_currency, start_date, end_date):
             API_ECB_URL.format(d.strftime('%Y-%m-%d')),
             params={'base': b_currency, 'symbols': q_currency},
         )
+        print('GET', r_ecb.url)
         r_json = r_ecb.json()
         rates_list.append((d.strftime('%Y-%m-%d'), r_json['rates'][q_currency]))
     return rates_list
@@ -41,6 +42,7 @@ def request_nbp_json(currency, day):
                                    day.strftime('%Y-%m-%d')),
                 params={'format': 'json'},
             )
+            print('GET', r_nbp.url)
             r_json = r_nbp.json()
         except JSONDecodeError:
             day = day - timedelta(days=1)
@@ -106,14 +108,16 @@ def make_requests(b_currency, q_currency, start_date, end_date):
     return get_stats_page(b_currency, q_currency, start_date, end_date, rates_ecb, rates_nbp)
 
 
-@app.route('/')
-@app.route('/index.html')
+@app.route('/', methods=['GET'])
+@app.route('/index.html', methods=['GET'])
 def my_form():
+    print('GET', request.url)
     return render_template('index.html', today=datetime.today().strftime('%Y-%m-%d'))
 
 
 @app.route('/stats', methods=['POST'])
 def my_form_post():
+    print('POST', request.url)
     b_currency = request.form['base_currency']
     q_currency = request.form['quote_currency']
     date_type = request.form['date_type']

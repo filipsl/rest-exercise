@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "5756bfb3-6358-459b-a38f-ebc4d00c7918",
+		"name": "SR_REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET http://127.0.0.1:5000/",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Upgrade-Insecure-Requests",
+						"value": "1"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "document"
+					},
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:5000/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST http://127.0.0.1:5000/stats",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Origin",
+						"value": "http://127.0.0.1:5000"
+					},
+					{
+						"key": "Upgrade-Insecure-Requests",
+						"value": "1"
+					},
+					{
+						"key": "DNT",
+						"value": "1"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "document"
+					},
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "base_currency",
+							"value": "AUD"
+						},
+						{
+							"key": "date_type",
+							"value": "fixed"
+						},
+						{
+							"key": "end_date",
+							"value": "2020-03-15"
+						},
+						{
+							"key": "fixed_days",
+							"value": "5"
+						},
+						{
+							"key": "quote_currency",
+							"value": "AUD"
+						},
+						{
+							"key": "start_date",
+							"value": "2020-03-15"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/stats",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET https://api.exchangeratesapi.io/2020-03-11?base=INR&symbols=HRK",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.exchangeratesapi.io/2020-03-11?base=INR&symbols=HRK",
+					"protocol": "https",
+					"host": [
+						"api",
+						"exchangeratesapi",
+						"io"
+					],
+					"path": [
+						"2020-03-11"
+					],
+					"query": [
+						{
+							"key": "base",
+							"value": "INR"
+						},
+						{
+							"key": "symbols",
+							"value": "HRK"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET http://api.nbp.pl/api/exchangerates/rates/a/INR/2020-03-11/?format=json",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.nbp.pl/api/exchangerates/rates/a/INR/2020-03-11/?format=json",
+					"protocol": "http",
+					"host": [
+						"api",
+						"nbp",
+						"pl"
+					],
+					"path": [
+						"api",
+						"exchangerates",
+						"rates",
+						"a",
+						"INR",
+						"2020-03-11",
+						""
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
