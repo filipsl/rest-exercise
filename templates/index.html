@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency exchange statistics</title>
+</head>
+<body>
+<form action="stats" method="POST">
+    <h1>Currency exchange statistics</h1>
+    <p>Show currency exchange statistics for the selected period of time.
+        <br/>
+        <br/> Sources of the data: European Central Bank, National Bank of Poland.
+        <br/> API: <a href="https://exchangeratesapi.io">exchangeratesapi.io</a>,
+        <a href="https://api.nbp.pl">api.nbp.pl</a>
+    </p>
+    <br/>
+    <br/>
+    <label for="base_currency"><b>Select base currency:</b></label>
+    <br/>
+    <select id="base_currency" name="base_currency">
+        <option value="AUD">AUD</option>
+        <option value="BGN">BGN</option>
+        <option value="BRL">BRL</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+        <option value="CNY">CNY</option>
+        <option value="CZK">CZK</option>
+        <option value="DKK">DKK</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="HKD">HKD</option>
+        <option value="HRK">HRK</option>
+        <option value="HUF">HUF</option>
+        <option value="IDR">IDR</option>
+        <option value="ILS">ILS</option>
+        <option value="INR">INR</option>
+        <option value="ISK">ISK</option>
+        <option value="JPY">JPY</option>
+        <option value="KRW">KRW</option>
+        <option value="MXN">MXN</option>
+        <option value="MYR">MYR</option>
+        <option value="NOK">NOK</option>
+        <option value="NZD">NZD</option>
+        <option value="PHP">PHP</option>
+        <option value="PLN">PLN</option>
+        <option value="RON">RON</option>
+        <option value="RUB">RUB</option>
+        <option value="SEK">SEK</option>
+        <option value="SGD">SGD</option>
+        <option value="THB">THB</option>
+        <option value="TRY">TRY</option>
+        <option value="USD">USD</option>
+        <option value="ZAR">ZAR</option>
+    </select>
+    <br/>
+    <label for="quote_currency"><b>Select quote currency:</b></label>
+    <br/>
+    <select id="quote_currency" name="quote_currency">
+        <option value="AUD">AUD</option>
+        <option value="BGN">BGN</option>
+        <option value="BRL">BRL</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+        <option value="CNY">CNY</option>
+        <option value="CZK">CZK</option>
+        <option value="DKK">DKK</option>
+        <option value="EUR">EUR</option>
+        <option value="GBP">GBP</option>
+        <option value="HKD">HKD</option>
+        <option value="HRK">HRK</option>
+        <option value="HUF">HUF</option>
+        <option value="IDR">IDR</option>
+        <option value="ILS">ILS</option>
+        <option value="INR">INR</option>
+        <option value="ISK">ISK</option>
+        <option value="JPY">JPY</option>
+        <option value="KRW">KRW</option>
+        <option value="MXN">MXN</option>
+        <option value="MYR">MYR</option>
+        <option value="NOK">NOK</option>
+        <option value="NZD">NZD</option>
+        <option value="PHP">PHP</option>
+        <option value="PLN">PLN</option>
+        <option value="RON">RON</option>
+        <option value="RUB">RUB</option>
+        <option value="SEK">SEK</option>
+        <option value="SGD">SGD</option>
+        <option value="THB">THB</option>
+        <option value="TRY">TRY</option>
+        <option value="USD">USD</option>
+        <option value="ZAR">ZAR</option>
+    </select>
+    <br/>
+    <br/>
+    <input type="radio" id="fixed" name="date_type" value="fixed" checked="checked">
+    <label for="fixed">Show data for
+        <select name="fixed_days">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+        last days.</label>
+    <br/>
+
+    <input type="radio" id="custom" name="date_type" value="custom">
+    <label for="custom">Show data for custom dates (select between 5 to 50 days):</label>
+    <br/>
+    <label for="start_date">Start date:</label>
+    <input type="date" id="start_date" name="start_date"
+           min="2005-01-01" max={{ today }}
+                   value={{ today }}>
+    <label for="end_date">End date:</label>
+    <input type="date" id="end_date" name="end_date"
+           min="2005-01-01" max={{ today }}
+                   value={{ today }}>
+    <br/>
+    <br/>
+
+    <input type="submit" value="Submit"/>
+</form>
+</body>
+</html>
